@@ -1,0 +1,41 @@
+{
+  "name": "Youtube Sleep Timer",
+  "description": "Sleep timer for youtube.com",
+  "homepage_url": "https://github.com/mhilker/youtube-sleep-timer",
+  "author": "Maik Hilker",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "permissions": [],
+  "applications": {
+    "gecko": {
+      "id": "maikhilker89@gmail.com",
+      "strict_min_version": "42.0"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "browser_style": true,
+    "default_icon": {
+      "128": "icons/icon-128.png"
+    },
+    "default_title": "Youtube Sleep Timer",
+    "default_popup": "action/action.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://youtube.com/*",
+        "*://www.youtube.com/*"
+      ],
+      "js": ["content/content.js"]
+    }
+  ],
+  "icons": {
+    "128": "icons/icon-128.png"
+  },
+  "options_ui": {
+    "page": "options/options.html"
+  }
+}
