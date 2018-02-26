@@ -1,6 +1,6 @@
-.idea/
-*.iml
-dist/*
-*.log
-web-ext-artifacts/
-node_modules/
+/.idea/
+/*.iml
+/dist/*
+/*.log
+/web-ext-artifacts/
+/node_modules/

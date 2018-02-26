@@ -1,0 +1,32 @@
+html {
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+.input-form {
+
+}
+
+.input-fieldset {
+    margin: 0.5rem;
+    border: none;
+}
+
+.input-text {
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.input-label {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.input-button {
+    width: 100%;
+    font-size: 1rem;
+    text-align: center;
+    padding: 10px 20px 10px 20px;
+    cursor: pointer;
+}

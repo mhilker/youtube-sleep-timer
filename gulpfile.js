@@ -4,7 +4,6 @@ const rollup = require('rollup-stream');
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const del = require('del');
-const watch = require('gulp-watch');
 
 const dist = './dist';
 
@@ -21,7 +20,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('copyStaticContent', () => {
-    gulp.src(['./src/**', '!./src/**/*.js']).pipe(gulp.dest("./dist"))
+    gulp.src('./static/**').pipe(gulp.dest("./dist"))
 });
 
 let rollupCache;
@@ -38,11 +37,6 @@ scripts.forEach(script => {
             .pipe(source(script.source))
             .pipe(gulp.dest(script.dest));
     });
-});
-
-
-gulp.task('watch', function () {
-    return watch(['src/**/*.*'], { ignoreInitial: false }).pipe(gulp.dest('build'));
 });
 
 gulp.task('build', ['copyStaticContent'].concat(scripts.map(script => script.taskName)));

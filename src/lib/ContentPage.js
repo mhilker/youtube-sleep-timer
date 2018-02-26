@@ -3,7 +3,8 @@ class ContentPage {
     constructor() {
         this.register.bind(this);
         this.onMessage.bind(this);
-        this.stopPlayer.bind(this);
+        this.startTimer.bind(this);
+        this.stopTimer.bind(this);
 
         this.timeout = null;
     }
@@ -28,11 +29,11 @@ class ContentPage {
         console.log(request);
 
         switch (request.action) {
-            case "stop":
-                this.stopPlayer(request, sender, sendResponse);
+            case "start":
+                this.startTimer(request, sender, sendResponse);
                 break;
-            case "continue":
-                this.continuePlayer(request, sender, sendResponse);
+            case "stop":
+                this.stopTimer(request, sender, sendResponse);
                 break;
             default:
                 console.error("Error: unknown action.");
@@ -44,8 +45,8 @@ class ContentPage {
      * @param sender
      * @param sendResponse
      */
-    stopPlayer(request, sender, sendResponse) {
-        console.log("ContentPage::stopPlayer()");
+    startTimer(request, sender, sendResponse) {
+        console.log("ContentPage::startTimer()");
 
         const elements = document.getElementsByClassName('html5-video-player');
         if (elements.length === 0) {
@@ -68,7 +69,7 @@ class ContentPage {
         }
 
         this.timeout = setTimeout(() => {
-            console.log("Click");
+            console.log("Stop");
             button[0].click();
         }, request.timeout)
     }
@@ -78,8 +79,8 @@ class ContentPage {
      * @param sender
      * @param sendResponse
      */
-    continuePlayer(request, sender, sendResponse) {
-        console.log("ContentPage::continuePlayer()");
+    stopTimer(request, sender, sendResponse) {
+        console.log("ContentPage::endTimer()");
 
         const elements = document.getElementsByClassName('html5-video-player');
         if (elements.length === 0) {
@@ -101,7 +102,7 @@ class ContentPage {
             clearTimeout(this.timeout);
         }
 
-        console.log("Click");
+        console.log("Resume");
         button[0].click();
     }
 }

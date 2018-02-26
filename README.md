@@ -8,7 +8,6 @@ All you need is node and npm. Following npm scripts are defined:
 
 ```bash
 $ npm run build   # bundles code and resources to ./dist
-$ npm run watch   # runs a watch task and builds the code when a file changes
 $ npm run clean   # performs cleanup of ./dist and built artifacts
 $ npm run test    # executes JavasScript tests
 $ npm run start   # runs Firefox with own profile and the add-on installed (needs ./dist to be built)

@@ -3,7 +3,9 @@ class BackgroundPage {
     constructor() {
         this.onMessage.bind(this);
         this.register.bind(this);
-        this.stopPlayer.bind(this);
+        this.stopTimeout.bind(this);
+        this.startTimeout.bind(this);
+        this.sendToAllTabs.bind(this);
     }
 
     /**
@@ -24,28 +26,51 @@ class BackgroundPage {
     onMessage(request, sender, sendResponse) {
         console.log("BackgroundPage::onMessage()");
         console.log(request);
-        console.log(this);
-        this.stopPlayer(request.timeout);
+
+        if (request.timeout === null) {
+            this.stopTimeout();
+        } else {
+            this.startTimeout(request.timeout);
+        }
     };
 
     /**
      * Send a message to stop all players to all tabs.
      */
-    stopPlayer(timeout) {
-        console.log("BackgroundPage::stopPlayer()");
+    startTimeout(timeout) {
+        console.log("BackgroundPage::startTimeout()");
 
-        const querying = browser.tabs.query({});
-
-        querying.then(tabs => {
-            for (const tab of tabs) {
-                console.log("Send message to Tab " + tab.id);
-                browser.tabs.sendMessage(tab.id, {
-                    action: "stop",
-                    timeout: timeout
-                });
-            }
+        this.sendToAllTabs({
+            action: "start",
+            timeout: timeout
         });
     };
+
+    /**
+     * Send a message to stop all players.
+     */
+    stopTimeout() {
+        console.log("BackgroundPage::stopTimeout()");
+
+        this.sendToAllTabs({
+            action: "stop"
+        });
+    };
+
+    sendToAllTabs(payload) {
+        try {
+            const querying = browser.tabs.query({});
+
+            querying.then(tabs => {
+                for (const tab of tabs) {
+                    console.log("Send message to Tab " + tab.id);
+                    browser.tabs.sendMessage(tab.id, payload);
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
 }
 
 export default BackgroundPage;

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" href="action.css"/>
+</head>
+<body>
+    <form class="input-form">
+
+        <fieldset id="input-start-fieldset" class="input-fieldset">
+            <label for="input-minutes" class="input-label">Timer for sleep mode in minutes</label>
+            <input type="number" min="1" max="60" name="minutes" id="input-minutes" value="3" class="input-text"/>
+            <button type="button" name="start" id="button-start" class="input-button">Start</button>
+        </fieldset>
+
+        <fieldset id="input-stop-fieldset" hidden class="input-fieldset">
+            <div class="input-label"><span id="timer-minutes"></span> minutes remaining</div>
+            <button type="button" name="stop" id="button-stop" class="input-button">Stop</button>
+        </fieldset>
+
+    </form>
+    <script src="action.js"></script>
+</body>
+</html>
