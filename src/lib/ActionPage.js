@@ -7,6 +7,7 @@ class ActionPage {
         this.register.bind(this);
         this.onChange.bind(this);
         this.onSubmit.bind(this);
+        this.getValue.bind(this);
     }
 
     /**
@@ -20,8 +21,8 @@ class ActionPage {
         this.input = input;
         this.button = button;
 
-        input.addEventListener('change', e => this.onChange(e));
-        button.addEventListener('click', e => this.onSubmit(e));
+        this.input.addEventListener('change', e => this.onChange(e));
+        this.button.addEventListener('click', e => this.onSubmit(e));
     };
 
     /**
@@ -29,6 +30,11 @@ class ActionPage {
      */
     onChange(event) {
         console.log("ActionPage::onChange()");
+
+        const timeout = this.getValue();
+        if (timeout !== null) {
+            return;
+        }
     };
 
     /**
@@ -37,14 +43,8 @@ class ActionPage {
     onSubmit(event) {
         console.log("ActionPage::onSubmit()");
 
-        let timeout = null;
-        try {
-            timeout = parseInt(this.input.value)
-        } catch (e) {
-            return;
-        }
-
-        if (Number.isInteger(timeout) === false) {
+        const timeout = this.getValue();
+        if (timeout === null) {
             return;
         }
 
@@ -52,6 +52,24 @@ class ActionPage {
             timeout: timeout * 1000
         });
     };
+
+    /**
+     * @returns int|null
+     */
+    getValue() {
+        let timeout = null;
+        try {
+            timeout = parseInt(this.input.value)
+        } catch (e) {
+            return null;
+        }
+
+        if (Number.isInteger(timeout) === false) {
+            return null;
+        }
+
+        return timeout;
+    }
 }
 
 export default ActionPage;

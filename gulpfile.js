@@ -4,13 +4,13 @@ const rollup = require('rollup-stream');
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const del = require('del');
+const watch = require('gulp-watch');
 
 const dist = './dist';
 
 const scripts = [
-    {taskName: 'buildBackground', entry: './src/background.js', source: 'background.js', dest: dist},
+    {taskName: 'buildBackground', entry: './src/background/background.js', source: 'background.js', dest: `${dist}/background`},
     {taskName: 'buildAction', entry: './src/action/action.js', source: 'action.js', dest: `${dist}/action`},
-    {taskName: 'buildOptions', entry: './src/options/options.js', source: 'options.js', dest: `${dist}/options`},
     {taskName: 'buildContent', entry: './src/content/content.js', source: 'content.js', dest: `${dist}/content`}
 ];
 
@@ -21,7 +21,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('copyStaticContent', () => {
-    gulp.src('./static/**').pipe(gulp.dest("./dist"))
+    gulp.src(['./src/**', '!./src/**/*.js']).pipe(gulp.dest("./dist"))
 });
 
 let rollupCache;
@@ -36,8 +36,13 @@ scripts.forEach(script => {
             cache: rollupCache
         }).on('unifiedcache', unifiedCache => rollupCache = unifiedCache)
             .pipe(source(script.source))
-            .pipe(gulp.dest(script.dest))
-    })
+            .pipe(gulp.dest(script.dest));
+    });
+});
+
+
+gulp.task('watch', function () {
+    return watch(['src/**/*.*'], { ignoreInitial: false }).pipe(gulp.dest('build'));
 });
 
 gulp.task('build', ['copyStaticContent'].concat(scripts.map(script => script.taskName)));

@@ -7,6 +7,16 @@ class BackgroundPage {
     }
 
     /**
+     * Register to listen to messages.
+     */
+    register() {
+        console.log("BackgroundPage::register()");
+        browser.runtime.onMessage.addListener((r, s, sr) => this.onMessage(r, s, sr));
+    }
+
+    /**
+     * Handle incoming messages.
+     *
      * @param request
      * @param sender
      * @param sendResponse
@@ -17,14 +27,6 @@ class BackgroundPage {
         console.log(this);
         this.stopPlayer(request.timeout);
     };
-
-    /**
-     *
-     */
-    register(){
-        console.log("BackgroundPage::register()");
-        browser.runtime.onMessage.addListener((r, s, sr) => this.onMessage(r, s, sr));
-    }
 
     /**
      * Send a message to stop all players to all tabs.

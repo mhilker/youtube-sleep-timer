@@ -21,14 +21,11 @@
     "pack": "web-ext build -s dist/",
     "sign": "web-ext sign -s dist/"
   },
-  "dependencies": {
-    "rot-13": "^1.0.0"
-  },
   "devDependencies": {
     "babel-core": "^6.24.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
     "gulp": "^3.9.1",
+    "gulp-watch": "^5.0.0",
     "mocha": "^3.3.0",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
@@ -38,8 +35,7 @@
   },
   "babel": {
     "plugins": [
-      "transform-class-properties",
-      "transform-es2016-modules-commonjs"
+      "transform-es2015-modules-commonjs"
     ]
   },
   "private": true

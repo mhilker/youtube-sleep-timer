@@ -4,6 +4,8 @@ class ContentPage {
         this.register.bind(this);
         this.onMessage.bind(this);
         this.stopPlayer.bind(this);
+
+        this.timeout = null;
     }
 
     /**
@@ -28,6 +30,9 @@ class ContentPage {
         switch (request.action) {
             case "stop":
                 this.stopPlayer(request, sender, sendResponse);
+                break;
+            case "continue":
+                this.continuePlayer(request, sender, sendResponse);
                 break;
             default:
                 console.error("Error: unknown action.");
@@ -58,12 +63,46 @@ class ContentPage {
             return;
         }
 
+        if (this.timeout !== null) {
+            clearTimeout(this.timeout);
+        }
+
+        this.timeout = setTimeout(() => {
+            console.log("Click");
+            button[0].click();
+        }, request.timeout)
+    }
+
+    /**
+     * @param request
+     * @param sender
+     * @param sendResponse
+     */
+    continuePlayer(request, sender, sendResponse) {
+        console.log("ContentPage::continuePlayer()");
+
+        const elements = document.getElementsByClassName('html5-video-player');
+        if (elements.length === 0) {
+            console.error("Error: \"html5-video-player\" not found.");
+            return;
+        }
+        if (elements[0].classList.contains('paused-mode') === false) {
+            console.error("Error: \"html5-video-player\" is paused.");
+            return;
+        }
+
+        const button = document.getElementsByClassName('ytp-play-button');
+        if (button.length === 0) {
+            console.error("Error: \"ytp-play-button\" not found.");
+            return;
+        }
+
+        if (this.timeout !== null) {
+            clearTimeout(this.timeout);
+        }
+
         console.log("Click");
         button[0].click();
-        //
-        // setTimeout(() => {
-        //
-        // }, request.timeout)
     }
 }
 
