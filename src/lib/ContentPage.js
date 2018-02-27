@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 class ContentPage {
 
     constructor() {
@@ -5,25 +7,16 @@ class ContentPage {
         this.onMessage.bind(this);
         this.startTimer.bind(this);
         this.stopTimer.bind(this);
+        this.clickPlayer.bind(this);
 
-        this.timeout = null;
+        this.timer = null;
     }
 
-    /**
-     * Register to listen on browser messages
-     */
     register() {
         console.log("ContentPage::register()");
         browser.runtime.onMessage.addListener((r, s, sr) => this.onMessage(r, s, sr));
     };
 
-    /**
-     * Stop the player on the current page, if it is playing.
-     *
-     * @param request
-     * @param sender
-     * @param sendResponse
-     */
     onMessage(request, sender, sendResponse) {
         console.log("ContentPage::onMessage()");
         console.log(request);
@@ -40,11 +33,6 @@ class ContentPage {
         }
     };
 
-    /**
-     * @param request
-     * @param sender
-     * @param sendResponse
-     */
     startTimer(request, sender, sendResponse) {
         console.log("ContentPage::startTimer()");
 
@@ -58,29 +46,16 @@ class ContentPage {
             return;
         }
 
-        const button = document.getElementsByClassName('ytp-play-button');
-        if (button.length === 0) {
-            console.error("Error: \"ytp-play-button\" not found.");
-            return;
+        if (this.timer !== null) {
+            clearTimeout(this.timer);
         }
 
-        if (this.timeout !== null) {
-            clearTimeout(this.timeout);
-        }
-
-        this.timeout = setTimeout(() => {
-            console.log("Stop");
-            button[0].click();
-        }, request.timeout)
+        const ms = moment.duration(request.timeout).asMilliseconds();
+        this.timer = setTimeout(this.clickPlayer, ms);
     }
 
-    /**
-     * @param request
-     * @param sender
-     * @param sendResponse
-     */
     stopTimer(request, sender, sendResponse) {
-        console.log("ContentPage::endTimer()");
+        console.log("ContentPage::stopTimer()");
 
         const elements = document.getElementsByClassName('html5-video-player');
         if (elements.length === 0) {
@@ -92,18 +67,24 @@ class ContentPage {
             return;
         }
 
-        const button = document.getElementsByClassName('ytp-play-button');
-        if (button.length === 0) {
+        if (this.timer !== null) {
+            clearTimeout(this.timer);
+        }
+
+        this.clickPlayer();
+    }
+
+    clickPlayer() {
+        console.log("ContentPage::clickPlayer()");
+
+        const buttons = document.getElementsByClassName('ytp-play-button');
+
+        if (buttons.length === 0) {
             console.error("Error: \"ytp-play-button\" not found.");
             return;
         }
 
-        if (this.timeout !== null) {
-            clearTimeout(this.timeout);
-        }
-
-        console.log("Resume");
-        button[0].click();
+        buttons[0].click();
     }
 }
 

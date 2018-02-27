@@ -1,6 +1,4 @@
-/.idea/
-/*.iml
-/dist/*
-/*.log
-/web-ext-artifacts/
-/node_modules/
+/.DS_Store
+/yarn.lock
+/extension/dist
+/node_modules

@@ -2,27 +2,31 @@
 
 Youtube Sleep Timer extension based on [WebExtensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) API.
 
-## How to use it
+## Usage
 
-All you need is node and npm. Following npm scripts are defined:
+First, you need to change into the example subdirectory and install all
+[NodeJS][nodejs] dependencies with [npm](http://npmjs.com/) or
+[yarn](https://yarnpkg.com/):
 
-```bash
-$ npm run build   # bundles code and resources to ./dist
-$ npm run clean   # performs cleanup of ./dist and built artifacts
-$ npm run test    # executes JavasScript tests
-$ npm run start   # runs Firefox with own profile and the add-on installed (needs ./dist to be built)
-$ npm run lint    # checks integrity of the add-on (needs ./dist to be built)
-$ npm run pack    # packs the add-on as a .zip into ./web-ext-artifacts
-$ npm run sign    # performs signing, builds .xpi into ./web-ext-artifacts on success
-```
+    npm install
 
-Note: for `npm run sign`, WEB_EXT_API_KEY and WEB_EXT_API_SECRET environment variables need to be set. See [web-ext](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/web-ext_command_reference#web-ext_sign) docs.
+Start the continuous build process to transpile the code into something that
+can run in Firefox or Chrome:
 
-## Just want to have a taste?
+    npm run build
 
-Give it a try and see how WebExtensions integrate:
-```bash
-$ npm link
-$ npm run build
-$ npm run start
-```
+This creates a WebExtension in the `extension` subdirectory.
+Any time you edit a file, it will be rebuilt automatically.
+
+In another shell window, run the extension in Firefox using a wrapper
+around [web-ext][web-ext]:
+
+    npm start
+
+Any time you edit a file, [web-ext][web-ext] will reload the extension
+in Firefox. To see the popup, click the watermelon icon from the browser bar.
+Here is what it looks like:
+
+[react]: https://facebook.github.io/react/
+[nodejs]: https://nodejs.org/en/
+[web-ext]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Getting_started_with_web-ext

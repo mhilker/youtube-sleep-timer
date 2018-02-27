@@ -13,32 +13,21 @@
     "url": "https://github.com/mhilker/youtube-sleep-timer/issues"
   },
   "scripts": {
-    "build": "gulp",
-    "clean": "gulp clean",
-    "test": "mocha --compilers js:babel-core/register",
-    "start": "web-ext run -s dist/ --start-url about:debugging --start-url about:addons --verbose",
-    "lint": "web-ext lint -s dist/",
-    "pack": "web-ext build -s dist/",
-    "sign": "web-ext sign -s dist/"
+    "build": "webpack -w --display-error-details --progress --colors",
+    "start": "web-ext run -s extension/ --start-url about:debugging --start-url about:addons"
   },
   "devDependencies": {
-    "babel-core": "^6.24.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
-    "gulp": "^3.9.1",
-    "mocha": "^3.3.0",
-    "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-stream": "^1.19.0",
-    "vinyl-source-stream": "^1.1.0",
-    "web-ext": "^1.9.1"
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
+    "babel-preset-stage-2": "6.24.1",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "web-ext": "2.3.2",
+    "webpack": "3.10.0"
   },
-  "babel": {
-    "plugins": [
-      "transform-es2015-modules-commonjs"
-    ]
-  },
-  "private": true,
   "dependencies": {
-    "moment": "^2.20.1"
+    "moment": "2.20.1"
   }
 }
