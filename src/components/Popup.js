@@ -60,7 +60,7 @@ export default class Popup extends React.Component {
     onChange = event => {
         console.log("Popup::onChange()");
 
-        const value = parseInt(event.target.value)
+        const value = parseInt(event.target.value);
         if (Number.isInteger(value) === false) {
             return;
         }
@@ -71,7 +71,7 @@ export default class Popup extends React.Component {
         });
     };
 
-    onSubmit = event => {
+    onSubmit = () => {
         console.log("Popup::onSubmit()");
 
         browser.runtime.sendMessage({
@@ -84,7 +84,7 @@ export default class Popup extends React.Component {
         });
     };
 
-    onAbort = event => {
+    onAbort = () => {
         console.log("Popup::onAbort()");
 
         browser.runtime.sendMessage({

@@ -36,13 +36,8 @@ class ContentPage {
     startTimer(request, sender, sendResponse) {
         console.log("ContentPage::startTimer()");
 
-        const elements = document.getElementsByClassName('html5-video-player');
-        if (elements.length === 0) {
-            console.error("Error: \"html5-video-player\" not found.");
-            return;
-        }
-        if (elements[0].classList.contains('paused-mode') === true) {
-            console.error("Error: \"html5-video-player\" is paused.");
+        if (this.isPaused() === false) {
+            console.error("Error: video player is paused.");
             return;
         }
 
@@ -56,16 +51,6 @@ class ContentPage {
 
     stopTimer(request, sender, sendResponse) {
         console.log("ContentPage::stopTimer()");
-
-        const elements = document.getElementsByClassName('html5-video-player');
-        if (elements.length === 0) {
-            console.error("Error: \"html5-video-player\" not found.");
-            return;
-        }
-        if (elements[0].classList.contains('paused-mode') === false) {
-            console.error("Error: \"html5-video-player\" is paused.");
-            return;
-        }
 
         if (this.timer !== null) {
             clearTimeout(this.timer);
@@ -85,6 +70,17 @@ class ContentPage {
         }
 
         buttons[0].click();
+    }
+
+    isPaused() {
+        const elements = document.getElementsByClassName('html5-video-player');
+
+        if (elements.length === 0) {
+            console.error("Error: \"html5-video-player\" not found.");
+            return;
+        }
+
+        return elements[0].classList.contains('paused-mode');
     }
 }
 
