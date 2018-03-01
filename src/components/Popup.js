@@ -7,13 +7,11 @@ export default class Popup extends React.Component {
         super(props);
 
         this.state = {
-            enteredDuration: moment.duration(5, 'seconds'),
+            enteredDuration: moment.duration(15, 'minutes'),
             startTime:       null,
             endTime:         null,
             timer:           null,
         };
-
-        browser.storage.local.remove(['settings']);
     }
 
     componentDidMount() {
@@ -39,6 +37,9 @@ export default class Popup extends React.Component {
     }
 
     saveState = state => {
+        console.log('Popup::saveState()');
+        console.log(state);
+
         browser.storage.local.set({
             settings: {
                 ...state,
@@ -46,7 +47,7 @@ export default class Popup extends React.Component {
                 startTime:       state.startTime !== null ? state.startTime.toISOString() : null,
                 endTime:         state.endTime !== null ? state.endTime.toISOString() : null,
             }
-        });
+        }).then(() => console.log("State saved.")).catch(e => console.error(e));
     };
 
     loadState = item => {
@@ -54,6 +55,7 @@ export default class Popup extends React.Component {
         console.log(item);
 
         if (typeof item.settings === "undefined") {
+            console.warn("Could not load state.");
             return;
         }
 
