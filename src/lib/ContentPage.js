@@ -1,15 +1,11 @@
-import moment from 'moment';
-
 class ContentPage {
 
     constructor() {
         this.register.bind(this);
         this.onMessage.bind(this);
-        this.startTimer.bind(this);
-        this.stopTimer.bind(this);
+        this.stopPlayer.bind(this);
+        this.startPlayer.bind(this);
         this.clickPlayer.bind(this);
-
-        this.timer = null;
     }
 
     register() {
@@ -22,41 +18,49 @@ class ContentPage {
         console.log(request);
 
         switch (request.action) {
-            case "start":
-                this.startTimer(request, sender, sendResponse);
+            case "play":
+                this.startPlayer(request, sender, sendResponse);
                 break;
-            case "stop":
-                this.stopTimer(request, sender, sendResponse);
+            case "pause":
+                this.stopPlayer(request, sender, sendResponse);
                 break;
             default:
                 console.error("Error: unknown action.");
         }
     };
 
-    startTimer(request, sender, sendResponse) {
-        console.log("ContentPage::startTimer()");
+    startPlayer(request, sender, sendResponse) {
+        console.log("ContentPage::stopTimer()");
 
         if (this.isPaused() === false) {
-            console.error("Error: video player is paused.");
+            console.log("Error: video player is not paused.");
             return;
         }
 
-        if (this.timer !== null) {
-            clearTimeout(this.timer);
-        }
+        this.clickPlayer();
 
-        const ms = moment.duration(request.timeout).asMilliseconds();
-        this.timer = setTimeout(this.clickPlayer, ms);
+        setTimeout(() => {
+            if (this.isPaused() === true) {
+                console.error("Error: video player is still paused.");
+            }
+        }, 1000);
     }
 
-    stopTimer(request, sender, sendResponse) {
-        console.log("ContentPage::stopTimer()");
+    stopPlayer(request, sender, sendResponse) {
+        console.log("ContentPage::startTimer()");
 
-        if (this.timer !== null) {
-            clearTimeout(this.timer);
+        if (this.isPaused() === true) {
+            console.log("Error: video player is already paused.");
+            return;
         }
 
         this.clickPlayer();
+
+        setTimeout(() => {
+            if (this.isPaused() === false) {
+                console.log("Error: video player is already paused.");
+            }
+        }, 1000);
     }
 
     clickPlayer() {

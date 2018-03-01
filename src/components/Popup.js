@@ -7,9 +7,10 @@ export default class Popup extends React.Component {
         super(props);
 
         this.state = {
-            enteredDuration:   moment.duration(5, 'seconds'),
-            remainingDuration: null,
-            timer:             null
+            enteredDuration: moment.duration(5, 'seconds'),
+            startTime:       null,
+            endTime:         null,
+            timer:           null,
         };
 
         browser.storage.local.remove(['settings']);
@@ -18,19 +19,15 @@ export default class Popup extends React.Component {
     componentDidMount() {
         console.log('Popup::componentDidMount()');
 
-        browser.storage.local.get('settings').then(this.loadState);
+        browser.storage.local.get('settings')
+            .then(this.loadState)
+            .catch(e => console.error(e));
     }
 
     componentWillUpdate(props, state) {
-        //console.log('Popup::componentWillUpdate()');
+        console.log('Popup::componentWillUpdate()');
 
-        browser.storage.local.set({
-            settings: {
-                ...state,
-                enteredDuration:   state.enteredDuration !== null ? state.enteredDuration.toISOString() : null,
-                remainingDuration: state.remainingDuration !== null ? state.remainingDuration.toISOString() : null,
-            }
-        });
+        this.saveState(state);
     }
 
     componentWillUnmount() {
@@ -41,19 +38,31 @@ export default class Popup extends React.Component {
         }
     }
 
+    saveState = state => {
+        browser.storage.local.set({
+            settings: {
+                ...state,
+                enteredDuration: state.enteredDuration !== null ? state.enteredDuration.toISOString() : null,
+                startTime:       state.startTime !== null ? state.startTime.toISOString() : null,
+                endTime:         state.endTime !== null ? state.endTime.toISOString() : null,
+            }
+        });
+    };
+
     loadState = item => {
         console.log('Popup::loadState()');
         console.log(item);
 
-        if (Object.keys(item).length === 0) {
+        if (typeof item.settings === "undefined") {
             return;
         }
 
         this.setState({
             ...item,
-            enteredDuration:   item.enteredDuration !== null ? moment.duration(item.enteredDuration) : null,
-            remainingDuration: item.remainingDuration !== null ? moment.duration(item.remainingDuration) : null,
-            timer:             item.timer !== null ? setInterval(this.timer, 1000) : null,
+            enteredDuration: item.settings.enteredDuration !== null ? moment.duration(item.settings.enteredDuration) : null,
+            startTime:       item.settings.startTime !== null ? moment(item.settings.startTime) : null,
+            endTime:         item.settings.endTime !== null ? moment(item.settings.endTime) : null,
+            timer:           item.settings.timer !== null ? setInterval(this.timer, 1000) : null,
         });
     };
 
@@ -62,25 +71,28 @@ export default class Popup extends React.Component {
 
         const value = parseInt(event.target.value);
         if (Number.isInteger(value) === false) {
+            console.error("Invalid value " + value);
             return;
         }
 
         this.setState({
             ...this.state,
-            enteredDuration: moment(value, 'minutes')
+            enteredDuration: moment.duration(value, 'minutes')
         });
     };
 
-    onSubmit = () => {
+    onStart = () => {
         console.log("Popup::onSubmit()");
 
         browser.runtime.sendMessage({
+            action:  "start",
             timeout: this.state.enteredDuration.toISOString()
         });
 
         this.setState({
-            remainingDuration: this.state.enteredDuration.clone(),
-            timer:             setInterval(this.timer, 1000),
+            startTime: moment(),
+            endTime:   moment().add(this.state.enteredDuration),
+            timer:     setInterval(this.timer, 1000),
         });
     };
 
@@ -88,53 +100,89 @@ export default class Popup extends React.Component {
         console.log("Popup::onAbort()");
 
         browser.runtime.sendMessage({
-            timeout: null
+            action: "stop"
         });
 
         clearTimeout(this.state.timer);
         this.setState({
-            remainingDuration: null,
-            timer:             null,
+            startTime: null,
+            endTime:   null,
+            timer:     null,
+        });
+    };
+
+    onContinueAndRestart = () => {
+        console.log("Popup::onContinueAndRestart()");
+
+        this.onContinue();
+        this.onStart();
+    };
+
+    onContinue = () => {
+        console.log("Popup::onContinue()");
+
+        browser.runtime.sendMessage({
+            action:  "continue"
         });
     };
 
     timer = () => {
-        //console.log("Popup::timer()");
+        console.log("Popup::timer()");
 
-        if (this.state.remainingDuration.seconds() <= 0) {
+        if (moment().isSameOrAfter(this.state.endTime)) {
             clearTimeout(this.state.timer);
             this.setState({
                 ...this.state,
-                remainingDuration: null,
-                timer:             null,
+                startTime: null,
+                timer:     null,
             });
         } else {
-            this.setState({
-                remainingDuration: this.state.remainingDuration.subtract(1, 'second')
-            });
+            this.forceUpdate();
         }
     };
 
     render() {
-        return (
-            <form className="input-form">
-                { this.state.timer === null &&
+        if (this.state.endTime !== null && this.state.timer === null) {
+            return (
+                <form className="input-form">
+                    <fieldset className="input-fieldset">
+                        <button onClick={e => this.onContinueAndRestart(e)} type="button" className="input-button">Continue Video & Restart Timer</button>
+                    </fieldset>
+                    <fieldset className="input-fieldset">
+                        <button onClick={e => this.onContinue(e)} type="button" className="input-button">Continue Video</button>
+                    </fieldset>
+                    <fieldset className="input-fieldset">
+                        <button onClick={e => this.onAbort(e)} type="button" className="input-button">Back</button>
+                    </fieldset>
+                </form>
+            );
+        }
+
+        if (this.state.timer === null) {
+            return (
+                <form className="input-form">
                     <fieldset className="input-fieldset">
                         <label htmlFor="input-minutes" className="input-label">Timer for sleep mode in minutes</label>
                         <input onChange={e => this.onChange(e)} type="number" min="1" max="60" name="minutes" value={this.state.enteredDuration.minutes()} className="input-text"/>
-                        <button onClick={e => this.onSubmit(e)} type="button" name="start" className="input-button">Start</button>
+                        <button onClick={e => this.onStart(e)} type="button" name="start" className="input-button">Start</button>
                     </fieldset>
-                }
+                </form>
+            );
+        }
 
-                {this.state.timer !== null &&
-                    <fieldset className="input-fieldset">
-                        <div className="input-label">
-                            <span>{this.state.remainingDuration.minutes().toString().padStart(2, '0')}:{this.state.remainingDuration.seconds().toString().padStart(2, '0')}</span>
-                            <span> minutes remaining</span>
-                        </div>
-                        <button onClick={e => this.onAbort(e)} type="button" name="stop" className="input-button">Stop</button>
-                    </fieldset>
-                }
+        const now  = moment();
+        const end  = this.state.startTime.clone().add(this.state.enteredDuration);
+        const diff = moment.duration(end.diff(now));
+
+        return (
+            <form className="input-form">
+                <fieldset className="input-fieldset">
+                    <div className="input-label">
+                        <span>{diff.minutes().toString().padStart(2, '0')}:{diff.seconds().toString().padStart(2, '0')}</span>
+                        <span> remaining</span>
+                    </div>
+                    <button onClick={e => this.onAbort(e)} type="button" name="stop" className="input-button">Stop</button>
+                </fieldset>
             </form>
         );
     }

@@ -1,3 +1,5 @@
+import moment from "moment/moment";
+
 class BackgroundPage {
 
     constructor() {
@@ -5,7 +7,9 @@ class BackgroundPage {
         this.register.bind(this);
         this.stopTimeout.bind(this);
         this.startTimeout.bind(this);
-        this.sendToAllTabs.bind(this);
+        this.sendMessageToAllTabs.bind(this);
+
+        this.timer = null;
     }
 
     /**
@@ -27,37 +31,54 @@ class BackgroundPage {
         console.log("BackgroundPage::onMessage()");
         console.log(request);
 
-        if (request.timeout === null) {
-            this.stopTimeout();
-        } else {
-            this.startTimeout(request.timeout);
+        switch (request.action) {
+            case "start":
+                this.startTimeout(request.timeout);
+                break;
+            case "stop":
+                this.stopTimeout();
+                break;
+            case "continue":
+                this.continuePlayer();
+                break;
+            default:
+                console.error("Error: unknown action.");
         }
     };
 
-    /**
-     * Send a message to stop all players to all tabs.
-     */
     startTimeout(timeout) {
         console.log("BackgroundPage::startTimeout()");
 
-        this.sendToAllTabs({
-            action: "start",
-            timeout: timeout
-        });
+        if (this.timer !== null) {
+            clearTimeout(this.timer);
+        }
+
+        const ms = moment.duration(timeout).asMilliseconds();
+
+        this.timer = setTimeout(() => {
+            this.sendMessageToAllTabs({
+                action: "pause"
+            });
+        }, ms);
     };
 
-    /**
-     * Send a message to stop all players.
-     */
     stopTimeout() {
         console.log("BackgroundPage::stopTimeout()");
 
-        this.sendToAllTabs({
-            action: "stop"
+        if (this.timer !== null) {
+            clearTimeout(this.timer);
+        }
+    };
+
+    continuePlayer() {
+        console.log("BackgroundPage::continuePlayer()");
+
+        this.sendMessageToAllTabs({
+            action: "play"
         });
     };
 
-    sendToAllTabs(payload) {
+    sendMessageToAllTabs(payload) {
         try {
             const querying = browser.tabs.query({});
 

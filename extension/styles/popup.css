@@ -19,6 +19,7 @@ html {
 
 .input-label {
     width: 100%;
+    display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
 }
@@ -27,6 +28,6 @@ html {
     width: 100%;
     font-size: 1rem;
     text-align: center;
-    padding: 10px 20px 10px 20px;
+    padding: 0.5rem 1rem 0.5rem 1rem;
     cursor: pointer;
 }
