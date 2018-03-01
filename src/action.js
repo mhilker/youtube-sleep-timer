@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Popup from "./components/Popup";
+import Action from "./components/Action";
 
 const root = document.getElementById('root');
-ReactDOM.render(<Popup/>, root);
+ReactDOM.render(<Action/>, root);

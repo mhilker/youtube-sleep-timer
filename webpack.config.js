@@ -9,7 +9,7 @@ module.exports = {
     // background: './src/background.js',
     background: './src/background.js',
     content: './src/content.js',
-    popup: './src/popup.js',
+    action: './src/action.js',
   },
   output: {
     // This copies each source entry into the extension dist folder named

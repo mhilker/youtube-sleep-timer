@@ -14,7 +14,8 @@
   },
   "scripts": {
     "build": "webpack -w --display-error-details --progress --colors",
-    "start": "web-ext run -s extension/ --start-url about:debugging --start-url about:addons"
+    "start": "web-ext run -s extension/ --start-url about:debugging --start-url about:addons",
+    "pack": "web-ext build -s extension/ --overwrite-dest"
   },
   "devDependencies": {
     "babel-core": "6.26.0",

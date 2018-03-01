@@ -1,32 +1,32 @@
 # Youtube Sleep Timer
 
-Youtube Sleep Timer extension based on [WebExtensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) API.
+Youtube Sleep Timer extension based on [WebExtensions][webextensions] API.
 
 ## Usage
 
-First, you need to change into the example subdirectory and install all
-[NodeJS][nodejs] dependencies with [npm](http://npmjs.com/) or
-[yarn](https://yarnpkg.com/):
+First, you need to change into the example subdirectory and install all [NodeJS][nodejs] dependencies with [npm][npm].
 
     npm install
 
-Start the continuous build process to transpile the code into something that
-can run in Firefox or Chrome:
+Start the continuous build process to transpile the code into something that can run in Firefox or Chrome:
 
     npm run build
 
 This creates a WebExtension in the `extension` subdirectory.
 Any time you edit a file, it will be rebuilt automatically.
 
-In another shell window, run the extension in Firefox using a wrapper
-around [web-ext][web-ext]:
+In another shell window, run the extension in Firefox using a wrapper around [web-ext][web-ext]:
 
-    npm start
+    npm run start
 
-Any time you edit a file, [web-ext][web-ext] will reload the extension
-in Firefox. To see the popup, click the watermelon icon from the browser bar.
-Here is what it looks like:
+Any time you edit a file, [web-ext][web-ext] will reload the extension in Firefox.
 
+You can pack the final extension using:
+
+    npm run pack
+
+[webextensions]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions
 [react]: https://facebook.github.io/react/
 [nodejs]: https://nodejs.org/en/
+[npm]: http://npmjs.com/
 [web-ext]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Getting_started_with_web-ext
