@@ -1,5 +1,7 @@
 # Youtube Sleep Timer
 
+[![Software License][ico-license]](LICENSE.md)
+
 Youtube Sleep Timer extension based on [WebExtensions][webextensions] API.
 
 ## Usage
@@ -24,7 +26,8 @@ Any time you edit a file, [web-ext][web-ext] will reload the extension in Firefo
 You can pack the final extension using:
 
     npm run pack
-
+    
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
 [webextensions]: https://developer.mozilla.org/en-US/Add-ons/WebExtensions
 [react]: https://facebook.github.io/react/
 [nodejs]: https://nodejs.org/en/
