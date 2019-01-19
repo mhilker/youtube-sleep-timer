@@ -1,12 +1,12 @@
 import moment from "moment/moment";
 
-class BackgroundPage {
-
+export default class BackgroundPage {
     constructor() {
         this.onMessage.bind(this);
         this.register.bind(this);
         this.stopTimeout.bind(this);
         this.startTimeout.bind(this);
+        this.continuePlayer.bind(this);
         this.sendMessageToAllTabs.bind(this);
 
         this.timer = null;
@@ -17,7 +17,7 @@ class BackgroundPage {
      */
     register() {
         console.log("BackgroundPage::register()");
-        browser.runtime.onMessage.addListener((r, s, sr) => this.onMessage(r, s, sr));
+        browser.runtime.onMessage.addListener((request, sender, sendResponse) => this.onMessage(request, sender, sendResponse));
     }
 
     /**
@@ -33,12 +33,15 @@ class BackgroundPage {
 
         switch (request.action) {
             case "start":
+                console.log('Action: start');
                 this.startTimeout(request.timeout);
                 break;
             case "stop":
+                console.log('Action: stop');
                 this.stopTimeout();
                 break;
             case "continue":
+                console.log('Action: continue');
                 this.continuePlayer();
                 break;
             default:
@@ -93,5 +96,3 @@ class BackgroundPage {
         }
     }
 }
-
-export default BackgroundPage;

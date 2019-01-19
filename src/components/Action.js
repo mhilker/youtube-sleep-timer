@@ -2,7 +2,6 @@ import React from 'react';
 import moment from "moment";
 
 export default class Action extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -77,9 +76,12 @@ export default class Action extends React.Component {
             return;
         }
 
+        const duration = moment.duration(value, 'minutes');
+        console.log(duration.asSeconds())
+
         this.setState({
             ...this.state,
-            enteredDuration: moment.duration(value, 'minutes')
+            enteredDuration: duration
         });
     };
 
@@ -144,6 +146,7 @@ export default class Action extends React.Component {
     };
 
     render() {
+        // Timer has ended
         if (this.state.endTime !== null && this.state.timer === null) {
             return (
                 <form className="input-form">
@@ -160,12 +163,13 @@ export default class Action extends React.Component {
             );
         }
 
+        // Timer not started
         if (this.state.timer === null) {
             return (
                 <form className="input-form">
                     <fieldset className="input-fieldset">
                         <label htmlFor="input-minutes" className="input-label">Timer for sleep mode in minutes</label>
-                        <input onChange={e => this.onChange(e)} type="number" min="1" max="60" name="minutes" value={this.state.enteredDuration.minutes()} className="input-text"/>
+                        <input onChange={e => this.onChange(e)} type="number" min="1" max="1440" name="minutes" value={this.state.enteredDuration.asMinutes()} className="input-text"/>
                         <button onClick={e => this.onStart(e)} type="button" name="start" className="input-button">Start</button>
                     </fieldset>
                 </form>
@@ -176,11 +180,18 @@ export default class Action extends React.Component {
         const end  = this.state.startTime.clone().add(this.state.enteredDuration);
         const diff = moment.duration(end.diff(now));
 
+        // Input Form
         return (
             <form className="input-form">
                 <fieldset className="input-fieldset">
                     <div className="input-label">
-                        <span>{diff.minutes().toString().padStart(2, '0')}:{diff.seconds().toString().padStart(2, '0')}</span>
+                        <span>
+                            {diff.hours().toString().padStart(2, '0')}
+                            :
+                            {diff.minutes().toString().padStart(2, '0')}
+                            :
+                            {diff.seconds().toString().padStart(2, '0')}
+                        </span>
                         <span> remaining</span>
                     </div>
                     <button onClick={e => this.onAbort(e)} type="button" name="stop" className="input-button">Stop</button>

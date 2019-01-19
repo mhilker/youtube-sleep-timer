@@ -28,8 +28,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://youtube.com/*",
-        "*://www.youtube.com/*"
+        "*://www.youtube.com/*",
+        "*://www.adultswim.com/*"
       ],
       "js": ["dist/content.js"]
     }

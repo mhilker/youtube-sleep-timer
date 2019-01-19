@@ -1,16 +1,18 @@
-class ContentPage {
+import * as Bridge from '../Bridge/Bridge';
 
+export default class ContentPage {
     constructor() {
         this.register.bind(this);
         this.onMessage.bind(this);
         this.stopPlayer.bind(this);
         this.startPlayer.bind(this);
-        this.clickPlayer.bind(this);
+
+        this.playerBridge = Bridge.Factory(window.location.hostname);
     }
 
     register() {
         console.log("ContentPage::register()");
-        browser.runtime.onMessage.addListener((r, s, sr) => this.onMessage(r, s, sr));
+        browser.runtime.onMessage.addListener((request, sender, sendResponse) => this.onMessage(request, sender, sendResponse));
     };
 
     onMessage(request, sender, sendResponse) {
@@ -32,15 +34,15 @@ class ContentPage {
     startPlayer(request, sender, sendResponse) {
         console.log("ContentPage::stopTimer()");
 
-        if (this.isPaused() === false) {
+        if (this.playerBridge.isPaused() === false) {
             console.log("Error: video player is not paused.");
             return;
         }
 
-        this.clickPlayer();
+        this.playerBridge.startPlayer();
 
         setTimeout(() => {
-            if (this.isPaused() === true) {
+            if (this.playerBridge.isPaused() === true) {
                 console.error("Error: video player is still paused.");
             }
         }, 1000);
@@ -49,43 +51,17 @@ class ContentPage {
     stopPlayer(request, sender, sendResponse) {
         console.log("ContentPage::startTimer()");
 
-        if (this.isPaused() === true) {
+        if (this.playerBridge.isPaused() === true) {
             console.log("Error: video player is already paused.");
             return;
         }
 
-        this.clickPlayer();
+        this.playerBridge.stopPlayer();
 
         setTimeout(() => {
-            if (this.isPaused() === false) {
-                console.log("Error: video player is already paused.");
+            if (this.playerBridge.isPaused() === false) {
+                console.log("Error: video player is already running.");
             }
         }, 1000);
     }
-
-    clickPlayer() {
-        console.log("ContentPage::clickPlayer()");
-
-        const buttons = document.getElementsByClassName('ytp-play-button');
-
-        if (buttons.length === 0) {
-            console.error("Error: \"ytp-play-button\" not found.");
-            return;
-        }
-
-        buttons[0].click();
-    }
-
-    isPaused() {
-        const elements = document.getElementsByClassName('html5-video-player');
-
-        if (elements.length === 0) {
-            console.error("Error: \"html5-video-player\" not found.");
-            return;
-        }
-
-        return elements[0].classList.contains('paused-mode');
-    }
 }
-
-export default ContentPage;
