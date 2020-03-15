@@ -1,7 +1,7 @@
 {
   "name": "youtube-sleep-timer",
   "description": "Youtube Sleep Timer Firefox Addon",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "author": "Maik Hilker",
   "homepage": "https://github.com/mhilker/youtube-sleep-timer",
@@ -25,8 +25,9 @@
     "babel-preset-stage-2": "6.24.1",
     "react": "16.2.0",
     "react-dom": "16.2.1",
-    "web-ext": "2.9.3",
-    "webpack": "3.10.0"
+    "web-ext": "4.1.0",
+    "webpack": "4.42.0",
+    "webpack-cli": "3.3.11"
   },
   "dependencies": {
     "moment": "2.20.1"
