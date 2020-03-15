@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.1] - 2020-03-15
 ### Changed
 - Security Updates
+- Update to Babel 7
 
 ## [1.1.0] - 2019-01-20
 ### Added

@@ -18,18 +18,34 @@
     "pack": "web-ext build -s extension/ --overwrite-dest"
   },
   "devDependencies": {
-    "babel-core": "6.26.0",
-    "babel-loader": "7.1.2",
-    "babel-preset-env": "1.6.1",
-    "babel-preset-react": "6.24.1",
-    "babel-preset-stage-2": "6.24.1",
-    "react": "16.2.0",
-    "react-dom": "16.2.1",
+    "@babel/core": "7.8.7",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/preset-env": "7.8.7",
+    "@babel/preset-react": "7.8.3",
+    "babel-loader": "8.0.6",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
     "web-ext": "4.1.0",
     "webpack": "4.42.0",
     "webpack-cli": "3.3.11"
   },
   "dependencies": {
-    "moment": "2.20.1"
+    "moment": "2.24.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "firefox": 74
+          }
+        }
+      ],
+      "@babel/react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
   }
 }
